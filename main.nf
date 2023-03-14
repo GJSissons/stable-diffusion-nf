@@ -7,6 +7,8 @@ params.outdir = 'results'
 
 process INFERENCE {
 
+    HUGGINGFACE_HUB_TOKEN='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'
+
     container 'storytek/stable-diffusion-nf:v0.1'
     publishDir "$params.outdir"
 
@@ -18,7 +20,7 @@ process INFERENCE {
 
     script:
     """
-    python3 -c "from huggingface_hub.hf_api import HfFolder; HfFolder.save_token('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')"
+    python3 -c "from huggingface_hub.hf_api import HfFolder; HfFolder.save_token('\$HUGGINGFACE_HUB_TOKEN')"
     inference.py "$prompt" "$height" "$width"
     """
 }
