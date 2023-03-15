@@ -17,7 +17,7 @@ process INFERENCE {
     tuple val(prompt), val(height), val(width), val(seed)
 
     output:
-    path("image.png")
+    path("*.png")
 
     script:
     """
@@ -43,7 +43,6 @@ process INFERENCE {
     prompt_str  = prompt.translate(str.maketrans('', '', string.punctuation))
     first_chars = prompt_str[0:29].replace(" ", "_")
     seed        = "$seed"
-
     image_name  = seed + "_" + first_chars + ".png"
     # Generate image
     image       = pipe(prompt, height=$height, width=$width).images[0]
