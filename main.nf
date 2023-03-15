@@ -7,7 +7,7 @@ params.outdir = 'results'
 
 process INFERENCE {
 
-    HUGGINGFACE_HUB_TOKEN='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'
+    secret 'HUGGINGFACE_HUB_TOKEN' 
 
     container 'storytek/stable-diffusion-nf:latest'
     publishDir "$params.outdir"
