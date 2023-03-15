@@ -9,7 +9,7 @@ process INFERENCE {
 
     HUGGINGFACE_HUB_TOKEN='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'
 
-    container 'storytek/stable-diffusion-nf:lateste'
+    container 'storytek/stable-diffusion-nf:latest'
     publishDir "$params.outdir"
 
     input:
