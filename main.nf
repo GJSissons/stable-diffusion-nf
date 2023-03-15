@@ -4,6 +4,7 @@ params.prompt = "Picture of Darth Vader eating broccoli pizza"
 params.height = 760
 params.width = 760
 params.outdir = 'results'
+params.images = 10
 
 process INFERENCE {
 
@@ -13,20 +14,57 @@ process INFERENCE {
     publishDir "$params.outdir"
 
     input:
-    tuple val(prompt), val(height), val(width)
+    tuple val(prompt), val(height), val(width), val(seed)
 
     output:
     path("image.png")
 
     script:
     """
-    python3 -c "from huggingface_hub.hf_api import HfFolder; HfFolder.save_token('\$HUGGINGFACE_HUB_TOKEN')"
-    inference.py "$prompt" "$height" "$width"
+    #!/usr/bin/env python3
+ 
+    # Import
+    import torch
+    from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
+    import string
+    from huggingface_hub import HfFolder
+
+    # Save Huggingface API token 
+    HfFolder.save_token("\$HUGGINGFACE_HUB_TOKEN") 
+
+    # Stable Diffusion parameters
+    model_id   = "stabilityai/stable-diffusion-2"
+    scheduler  = EulerDiscreteScheduler.from_pretrained(model_id, subfolder="scheduler")
+    pipe       = StableDiffusionPipeline.from_pretrained(model_id, scheduler=scheduler, revision="fp16", torch_dtype=torch.float16, safety_checker=None) 
+    pipe       = pipe.to("cuda")
+
+    # Define image filename
+    prompt      = "$prompt"
+    prompt_str  = prompt.translate(str.maketrans('', '', string.punctuation))
+    first_chars = prompt_str[0:29].replace(" ", "_")
+    seed        = "$seed"
+
+    image_name  = seed + "_" + first_chars + ".png"
+    # Generate image
+    image       = pipe(prompt, height=$height, width=$width).images[0]
+    image.save(image_name)
     """
 }
 
 workflow {
 
-    INFERENCE(Channel.of([params.prompt,params.height,params.width]))
+    // Create a channel containing N random seeds
+    Channel
+        .of(1..100000)
+        .randomSample(params.images.toInteger())
+        .set{images_ch}
+
+    // Combine prompt with N random seeds
+    Channel
+        .of([params.prompt,params.height,params.width])
+        .combine(images_ch)
+        .set{stable_diffusion_ch}
+
+    INFERENCE(stable_diffusion_ch)
 
 }
