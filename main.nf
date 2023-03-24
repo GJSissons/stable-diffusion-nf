@@ -50,6 +50,22 @@ process INFERENCE {
     """
 }
 
+process MERGE {
+
+    container 'dpokidov/imagemagick'
+    publishDir "$params.outdir"
+
+    input:
+    path 'image'
+
+    """
+    touch results.txt
+    echo image* >> results.txt
+    montage *.jpg -geometry 100x100+4+4 montage.jpg
+    """
+}
+
+
 workflow {
 
     // Create a channel containing N random seeds
@@ -64,6 +80,8 @@ workflow {
         .combine(images_ch)
         .set{stable_diffusion_ch}
 
-    INFERENCE(stable_diffusion_ch)
+    INFERENCE(stable_diffusion_ch) \
+        | collect \
+        | MERGE
 
 }
