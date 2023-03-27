@@ -53,7 +53,6 @@ process INFERENCE {
 process MERGE {
 
     container 'dpokidov/imagemagick'
-    containerOptions '--entrypoint=""'
     publishDir "$params.outdir"
 
     input:
