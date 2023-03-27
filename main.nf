@@ -61,7 +61,8 @@ process MERGE {
     """
     touch results.txt
     echo image* >> results.txt
-    montage *.jpg -geometry 100x100+4+4 montage.jpg
+    -version
+    #montage *.jpg -geometry 100x100+4+4 montage.jpg
     """
 }
 
