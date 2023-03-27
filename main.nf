@@ -52,15 +52,16 @@ process INFERENCE {
 
 process MERGE {
 
+    container 'dpokidov/imagemagick'
     publishDir "$params.outdir"
-    container true
 
     input:
     path 'image'
 
-    '''
-    dpokidov/imagemagick --entrypoint="montage" -version
-    '''
+    """
+    touch results.txt
+    echo image* >> results.txt
+    """
 
 }
 
