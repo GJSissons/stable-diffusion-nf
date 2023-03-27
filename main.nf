@@ -62,13 +62,6 @@ process MERGE {
     dpokidov/imagemagick --entrypoint="montage" -version
     '''
 
-    #"""
-    #touch results.txt
-    #echo image* >> results.txt
-    #dpokidov/imagemagick --entrypoint="montage" -version
-    #-version
-    #montage *.jpg -geometry 100x100+4+4 montage.jpg
-    #"""
 }
 
 
