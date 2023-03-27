@@ -52,7 +52,6 @@ process INFERENCE {
 
 process MERGE {
 
-    #container 'dpokidov/imagemagick'
     publishDir "$params.outdir"
     container true
 
