@@ -59,6 +59,8 @@ process MERGE {
     path 'image'
 
     """
+    touch results.txt
+    echo image* >> results.txt
     montage image* mosaic.png 
     """
 
