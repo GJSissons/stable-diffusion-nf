@@ -52,15 +52,14 @@ process INFERENCE {
 
 process MERGE {
 
-    container 'dpokidov/imagemagick'
-    containerOptions '--entrypoint="/usr/bin/env"'
+    container 'storytek/imagemagick:latest'
     publishDir "$params.outdir"
 
     input:
     path 'image'
 
     """
-    /usr/local/bin/montage image* mosaic.png 
+    montage image* mosaic.png 
     """
 
 }
