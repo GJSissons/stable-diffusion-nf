@@ -58,6 +58,9 @@ process MERGE {
     input:
     path 'image'
 
+    output:
+    path("*.png")
+
     """
     touch results.txt
     echo image* >> results.txt
