@@ -22,7 +22,7 @@
                     "default": "3",
                     "fa_icon": "fas fa-hashtag",
                     "minimum": 1,
-                    "maximum": 25
+                    "maximum": 64
                 },
                 "height": {
                     "type": "string",
